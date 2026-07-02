@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eMAC Hospital Portal — ระบบบัตรแพ้ยา</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      /* ตั้ง theme ก่อน paint กัน flash — default คือ light, เป็น dark เฉพาะเมื่อผู้ใช้เคยเลือกไว้ */
+      (function () {
+        try {
+          if (localStorage.getItem('emac-theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <!-- PDF.js for rendering PDF previews -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
@@ -15,10 +25,87 @@
       @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
 
+      /* ===== Design tokens — light (ขาว-เขียวพาสเทล ราชการโมเดิร์น) ===== */
+      :root {
+        --bg: #F6FAF7;
+        --surface: #FFFFFF;
+        --surface-2: #F9FCFA;
+        --tint: #EEF6F0;
+        --tint-faint: #FAFDFB;
+        --border: #DBE9E0;
+        --border-soft: #E6F0E9;
+        --line: #CDE5D6;
+        --primary: #0F7B4D;
+        --primary-hover: #0B6640;
+        --primary-soft: rgba(15, 123, 77, 0.45);
+        --ink: #17281F;
+        --muted: #61756A;
+        --muted-2: #8AA093;
+        --faint: #A9BDB1;
+        --label: #4C6456;
+        --warn-text: #92600A;
+        --warn-bg: #FDF4E3;
+        --warn-border: #F0DDB9;
+        --danger-text: #B42318;
+        --danger-hover: #9A1E14;
+        --danger-bg: #FDECEA;
+        --danger-bg-hover: #FBDCD8;
+        --danger-border: #F5C6C0;
+        --danger-faint: #FFFAF9;
+        --danger-btn: #B42318;
+        --danger-btn-hover: #9A1E14;
+        --info-text: #0369A1;
+        --info-bg: #F0F9FF;
+        --info-border: #BAE6FD;
+        --rule: rgba(15, 123, 77, 0.6);
+        --overlay: rgba(23, 40, 31, 0.4);
+        --header-bg: rgba(255, 255, 255, 0.95);
+        --dot: #D7E7DC;
+      }
+
+      /* ===== Design tokens — dark (เขียวเข้มอมดำ คงโทนกระทรวงฯ) ===== */
+      html.dark {
+        --bg: #0C1310;
+        --surface: #111A15;
+        --surface-2: #15201A;
+        --tint: #18261F;
+        --tint-faint: #121C16;
+        --border: #26382E;
+        --border-soft: #1D2C24;
+        --line: #2E4636;
+        --primary: #2FA36B;
+        --primary-hover: #3CB97D;
+        --primary-soft: rgba(47, 163, 107, 0.5);
+        --ink: #E9F3ED;
+        --muted: #9BB0A3;
+        --muted-2: #73897C;
+        --faint: #5A6E62;
+        --label: #AECBBB;
+        --warn-text: #E3B341;
+        --warn-bg: #2A2113;
+        --warn-border: #4C3D1D;
+        --danger-text: #F0837A;
+        --danger-hover: #D9564A;
+        --danger-bg: #2C1714;
+        --danger-bg-hover: #3A1E1A;
+        --danger-border: #54271F;
+        --danger-faint: #1E1512;
+        --danger-btn: #B3382E;
+        --danger-btn-hover: #C24A40;
+        --info-text: #7CC7F0;
+        --info-bg: #12222E;
+        --info-border: #1F3D52;
+        --rule: rgba(47, 163, 107, 0.6);
+        --overlay: rgba(0, 0, 0, 0.6);
+        --header-bg: rgba(17, 26, 21, 0.92);
+        --dot: #1E2E25;
+      }
+
       body {
         font-family: 'Sarabun', sans-serif;
-        background-color: #F6FAF7; /* ขาวอมเขียวพาสเทล */
-        color: #17281F;
+        background-color: var(--bg);
+        color: var(--ink);
+        transition: background-color 0.25s ease, color 0.25s ease;
       }
 
       .font-mono, code, kbd, samp, pre {
@@ -28,7 +115,7 @@
       /* Technical Dot Grid Background */
       .bg-dot-grid {
         background-size: 40px 40px;
-        background-image: radial-gradient(circle, #D7E7DC 1px, transparent 1px);
+        background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
       }
 
       /* Smooth scrolling for the whole app */

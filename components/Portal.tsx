@@ -93,15 +93,15 @@ export const Portal: React.FC = () => {
 
   return (
     <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col min-h-0">
-      <div className="flex-1 flex flex-col bg-white border border-[#DBE9E0] rounded-3xl overflow-hidden shadow-sm min-h-[70vh]">
+      <div className="flex-1 flex flex-col bg-[var(--surface)] border border-[var(--border)] rounded-3xl overflow-hidden shadow-sm min-h-[70vh]">
         {/* Bar */}
-        <div className="px-6 py-4 bg-[#F9FCFA] border-b border-[#E6F0E9] flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#EEF6F0] rounded-xl flex items-center justify-center border border-[#CDE5D6] text-[#0F7B4D]">
+        <div className="px-6 py-4 bg-[var(--surface-2)] border-b border-[var(--border-soft)] flex items-center gap-3">
+          <div className="w-10 h-10 bg-[var(--tint)] rounded-xl flex items-center justify-center border border-[var(--line)] text-[var(--primary)]">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-[#17281F]">ทะเบียนผู้ป่วยแพ้ยา</h2>
-            <p className="text-xs text-[#61756A]">
+            <h2 className="text-base font-bold text-[var(--ink)]">ทะเบียนผู้ป่วยแพ้ยา</h2>
+            <p className="text-xs text-[var(--muted)]">
               tenant-scoped · เห็นเฉพาะ รพ. {identity?.hospcode}
             </p>
           </div>
