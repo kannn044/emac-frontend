@@ -93,15 +93,15 @@ export const Portal: React.FC = () => {
 
   return (
     <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col min-h-0">
-      <div className="flex-1 flex flex-col bg-[#0b0c0e] border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl min-h-[70vh]">
+      <div className="flex-1 flex flex-col bg-white border border-[#DBE9E0] rounded-3xl overflow-hidden shadow-sm min-h-[70vh]">
         {/* Bar */}
-        <div className="px-6 py-4 bg-[#111215] border-b border-zinc-800/80 flex items-center gap-3">
-          <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center border border-indigo-500/20 text-indigo-400">
+        <div className="px-6 py-4 bg-[#F9FCFA] border-b border-[#E6F0E9] flex items-center gap-3">
+          <div className="w-10 h-10 bg-[#EEF6F0] rounded-xl flex items-center justify-center border border-[#CDE5D6] text-[#0F7B4D]">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-zinc-100">ทะเบียนผู้ป่วยแพ้ยา</h2>
-            <p className="text-xs text-zinc-500">
+            <h2 className="text-base font-bold text-[#17281F]">ทะเบียนผู้ป่วยแพ้ยา</h2>
+            <p className="text-xs text-[#61756A]">
               tenant-scoped · เห็นเฉพาะ รพ. {identity?.hospcode}
             </p>
           </div>

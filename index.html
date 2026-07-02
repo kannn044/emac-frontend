@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="th">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -12,19 +12,23 @@
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-      
+      @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
       body {
-        font-family: 'Inter', sans-serif;
-        background-color: #09090b; /* Zinc 950 */
-        color: #fafafa;
+        font-family: 'Sarabun', sans-serif;
+        background-color: #F6FAF7; /* ขาวอมเขียวพาสเทล */
+        color: #17281F;
       }
-      
+
+      .font-mono, code, kbd, samp, pre {
+        font-family: 'IBM Plex Mono', monospace;
+      }
+
       /* Technical Dot Grid Background */
       .bg-dot-grid {
         background-size: 40px 40px;
-        background-image: radial-gradient(circle, #3f3f46 1px, transparent 1px);
+        background-image: radial-gradient(circle, #D7E7DC 1px, transparent 1px);
       }
 
       /* Smooth scrolling for the whole app */
