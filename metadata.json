@@ -1,0 +1,8 @@
+{
+  "name": "eMAC Digital Portal",
+  "description": "An interactive clinical demo of the Electronic Medication Allergy Card (eMAC) system with a mobile patient wallet and a pharmacist edit & approval dashboard, featuring pharmacogenomics (HLA-B*15:02) and SJS/TEN risk safeguards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
