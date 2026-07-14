@@ -214,9 +214,24 @@ function toQueryString(query: PatientListQuery): string {
   return s ? `?${s}` : '';
 }
 
+// ---- OAuth (real mode) ----
+
+/**
+ * URL สำหรับ redirect ทั้งหน้าไปเริ่ม OAuth flow (backend จะ 302 ต่อไป Provider ID)
+ * ใช้กับ window.location.href — ไม่ใช่ fetch (เพราะเป็น redirect ข้าม origin)
+ */
+export function oauthLoginUrl(state?: string): string {
+  const qs = state ? `?state=${encodeURIComponent(state)}` : '';
+  return `${BASE}/auth/login${qs}`;
+}
+
 // ---- Endpoints ----
 
 export const api = {
+  /** mock | real — ให้ frontend เลือก UI login ให้ถูกโหมด */
+  getAuthMode(): Promise<{ mode: 'mock' | 'real' }> {
+    return request('/auth/mode');
+  },
   getProviders(): Promise<{ providers: MockProfile[] }> {
     return request('/auth/providers');
   },
@@ -224,6 +239,13 @@ export const api = {
     return request('/auth/session', {
       method: 'POST',
       body: JSON.stringify({ providerId }),
+    });
+  },
+  /** (real) แลก authorization code จาก Provider ID เป็น session JWT */
+  loginWithCode(code: string): Promise<LoginResponse> {
+    return request('/auth/callback', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
     });
   },
   getMe(): Promise<{ identity: Identity }> {

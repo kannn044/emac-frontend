@@ -1,16 +1,18 @@
 /**
- * LoginScreen — mock login (P2) : ดึงรายชื่อ provider จาก API แล้วให้เลือกเข้าสู่ระบบ
- * (แทน MOPH Provider ID จริง ระหว่างที่ยังไม่ได้ client id — สลับเป็น OIDC ภายหลัง)
+ * LoginScreen — รองรับ 2 โหมดตาม backend (/auth/mode)
+ *   real : ปุ่ม "เข้าสู่ระบบด้วย Provider ID" → redirect ไป MOPH Provider ID (OAuth2)
+ *   mock : ดึงรายชื่อ provider จาก API แล้วให้เลือกเข้าสู่ระบบ (dev เท่านั้น)
  */
 import React, { useEffect, useState } from 'react';
-import { Hospital, UserCheck, LogIn, AlertCircle } from 'lucide-react';
-import { api, type MockProfile } from '../lib/apiClient';
-import { useAuth } from '../lib/AuthContext';
+import { Hospital, UserCheck, LogIn, AlertCircle, ShieldCheck } from 'lucide-react';
+import { api, oauthLoginUrl, type MockProfile } from '../lib/apiClient';
+import { useAuth, oauthStateStore } from '../lib/AuthContext';
 import { ThemeToggle } from '../lib/theme';
 import logoMoph from '../assets/logo_moph.png';
 
 export const LoginScreen: React.FC = () => {
   const { login, error } = useAuth();
+  const [mode, setMode] = useState<'mock' | 'real' | null>(null);
   const [providers, setProviders] = useState<MockProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -20,8 +22,13 @@ export const LoginScreen: React.FC = () => {
     let active = true;
     (async () => {
       try {
-        const { providers } = await api.getProviders();
-        if (active) setProviders(providers);
+        const { mode } = await api.getAuthMode();
+        if (!active) return;
+        setMode(mode);
+        if (mode === 'mock') {
+          const { providers } = await api.getProviders();
+          if (active) setProviders(providers);
+        }
       } catch {
         if (active)
           setLoadError('เชื่อมต่อ backend ไม่ได้ — ตรวจว่ารัน API ที่พอร์ต 3000 แล้ว');
@@ -43,6 +50,13 @@ export const LoginScreen: React.FC = () => {
     } finally {
       setSubmitting(null);
     }
+  };
+
+  /** real: redirect ทั้งหน้าไปหน้า login ของ MOPH Provider ID */
+  const handleOAuthLogin = () => {
+    setSubmitting('oauth');
+    const state = oauthStateStore.create();
+    window.location.href = oauthLoginUrl(state);
   };
 
   return (
@@ -75,17 +89,25 @@ export const LoginScreen: React.FC = () => {
           <div className="px-6 py-4 border-b border-[var(--border-soft)] bg-[var(--surface-2)]">
             <div className="flex items-center gap-2 text-[var(--ink)]">
               <UserCheck className="w-4 h-4 text-[var(--primary)]" />
-              <span className="text-sm font-bold">เลือกบัญชีเพื่อเข้าสู่ระบบ</span>
+              <span className="text-sm font-bold">
+                {mode === 'real' ? 'เข้าสู่ระบบสำหรับบุคลากรทางการแพทย์' : 'เลือกบัญชีเพื่อเข้าสู่ระบบ'}
+              </span>
             </div>
-            <p className="text-[11px] text-[var(--warn-text)] mt-1 font-mono">
-              MOCK LOGIN — จำลอง MOPH Provider ID (ยังไม่ใช้ client id จริง)
-            </p>
+            {mode === 'real' ? (
+              <p className="text-[11px] text-[var(--muted)] mt-1">
+                ยืนยันตัวตนผ่าน MOPH Provider ID (กระทรวงสาธารณสุข)
+              </p>
+            ) : (
+              <p className="text-[11px] text-[var(--warn-text)] mt-1 font-mono">
+                MOCK LOGIN — จำลอง MOPH Provider ID (ยังไม่ใช้ client id จริง)
+              </p>
+            )}
           </div>
 
           <div className="p-4 space-y-2">
             {loading && (
               <div className="py-10 text-center text-xs text-[var(--muted)]">
-                กำลังโหลดรายชื่อบัญชี...
+                กำลังโหลด...
               </div>
             )}
 
@@ -96,7 +118,22 @@ export const LoginScreen: React.FC = () => {
               </div>
             )}
 
-            {providers.map((p) => (
+            {mode === 'real' && !loading && (
+              <button
+                onClick={handleOAuthLogin}
+                disabled={submitting !== null}
+                className="w-full flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl bg-[var(--primary)] text-white font-bold text-sm hover:opacity-90 transition-all disabled:opacity-50 shadow-sm"
+              >
+                <ShieldCheck className="w-5 h-5" />
+                <span>
+                  {submitting === 'oauth'
+                    ? 'กำลังไปยังหน้าเข้าสู่ระบบ...'
+                    : 'เข้าสู่ระบบด้วย Provider ID'}
+                </span>
+              </button>
+            )}
+
+            {mode === 'mock' && providers.map((p) => (
               <button
                 key={p.providerId}
                 onClick={() => handleLogin(p.providerId)}
@@ -135,7 +172,9 @@ export const LoginScreen: React.FC = () => {
         </div>
 
         <p className="text-center text-[10px] text-[var(--muted-2)] mt-6 font-mono">
-          Phase 1 · Mock Authentication + Session
+          {mode === 'real'
+            ? 'Secured by MOPH Provider ID · OAuth 2.0'
+            : 'Phase 1 · Mock Authentication + Session'}
         </p>
       </div>
     </div>
