@@ -31,7 +31,7 @@ export const LoginScreen: React.FC = () => {
         }
       } catch {
         if (active)
-          setLoadError('เชื่อมต่อ backend ไม่ได้ — ตรวจว่ารัน API ที่พอร์ต 3000 แล้ว');
+          setLoadError('โหลดข้อมูลเข้าสู่ระบบไม่ได้ — ตรวจสอบ API และการตั้งค่า proxy ของเซิร์ฟเวอร์');
       } finally {
         if (active) setLoading(false);
       }

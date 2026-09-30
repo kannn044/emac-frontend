@@ -8,7 +8,7 @@ React 19 + Vite + Tailwind — production: **https://emac.moph.go.th**
 ## ภาพรวม
 
 ```
-เบราว์เซอร์ ──► emac.moph.go.th (nginx เสิร์ฟ static dist/)
+เบราว์เซอร์ ──► emac.moph.go.th (nginx → PM2 เสิร์ฟ dist/)
                   ├─ /auth/*, /api/*, /embed/*  → proxy ไป api-mophlink.moph.go.th/drugallergy
                   └─ /* → index.html (SPA)
 ```
@@ -57,26 +57,15 @@ npm run dev        # → http://localhost:5173
 Vite dev server proxy `/auth`, `/api`, `/embed` ไป backend อัตโนมัติ
 (ตั้งเป้าหมายที่ `VITE_API_PROXY_TARGET` ใน `.env.local`)
 
-## Build & Deploy (production: emac.moph.go.th)
+## Build & Deploy (สอง server + PM2)
 
-```bash
-npm ci
-npm run build:emac     # โหลด .env.production-emac (VITE_API_BASE ว่าง, base=/)
-rsync -a --delete dist/ /var/www/emac-frontend/dist/
-```
+ทำตาม [deploy/DEPLOY-PM2.md](deploy/DEPLOY-PM2.md) เป็นคู่มือหลัก
 
-- **ไม่ใช้ pm2/vite preview** — nginx เสิร์ฟ `dist/` ตรง (ดู `deploy/nginx-emac.conf` +
-  `deploy/snippets/emac-api-proxy.conf`)
-- nginx proxy `/auth`, `/api`, `/embed` → `https://api-mophlink.moph.go.th/drugallergy/...`
-  (RHEL: ต้อง `setsebool -P httpd_can_network_connect 1`)
-- log: `/var/log/nginx/access.log`, `error.log` (ฝั่ง client ดู DevTools Console/Network)
-
-env build แต่ละ deployment:
-
-| ไฟล์ | ใช้กับ | คำสั่ง build |
-|------|--------|--------------|
-| `.env.production-emac` | emac.moph.go.th (root domain) | `npm run build:emac` |
-| `.env.production` | poc.moph.go.th/emac (subpath, legacy) | `npm run build` |
+- Frontend: `/home/gdata/emac/emac-frontend`, PM2 `emac-web`, `127.0.0.1:4180`
+- Backend: `/home/gdata/emac-backend`, PM2 `emac-api`, port `3100`, prefix `/drugallergy`
+- `npm run build` และ `npm run build:emac` ใช้ root domain และ same-origin API เหมือนกัน
+- `npm start` เสิร์ฟ `dist/` ผ่าน Node; Nginx ส่ง API ไป backend domain
+- `ecosystem.emac.config.cjs` เป็น alias ของ `ecosystem.config.cjs`
 
 ## โครงสร้าง
 

@@ -19,7 +19,11 @@ export default defineConfig(({ mode }) => {
     .split(',')
     .map((h) => h.trim())
     .filter(Boolean);
-  const allowedHosts = [...new Set([...extraHosts, 'localhost', '127.0.0.1'])];
+  // '.moph.go.th' = อนุญาตทุก subdomain ของ moph (poc/emac/...) แบบตายตัว
+  // กันปัญหา env ไม่โหลด — preview อยู่หลัง nginx บน 127.0.0.1 อยู่แล้ว (การเช็ค host ซ้ำซ้อน)
+  const allowedHosts = [
+    ...new Set([...extraHosts, 'localhost', '127.0.0.1', '.moph.go.th']),
+  ];
 
   return {
     base: basePath,

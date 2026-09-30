@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:emac": "vite build --mode production-emac",
-    "preview:emac": "vite preview --mode production-emac"
+    "preview:emac": "vite preview --mode production-emac",
+    "start": "node scripts/serve.mjs",
+    "test:deploy": "node --test test/deployment.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.28.0",

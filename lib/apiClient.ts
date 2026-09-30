@@ -2,7 +2,7 @@
  * API client — ห่อ fetch สำหรับเรียก Drug Allergy Card API
  *
  * dev: เรียกผ่าน Vite proxy (/auth, /api → backend :3000) → ใช้ base '' (same-origin)
- * prod: ตั้ง VITE_API_BASE เป็น URL เต็มของ service (เช่น https://.../drugallergy)
+ * prod: VITE_API_BASE ว่าง → nginx proxy /auth,/api ไป backend /drugallergy
  *
  * แนบ Bearer token (session ของระบบเรา) อัตโนมัติจาก tokenStore
  */
