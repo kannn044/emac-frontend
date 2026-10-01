@@ -222,7 +222,7 @@ function toQueryString(query: PatientListQuery): string {
  */
 export function oauthLoginUrl(state?: string): string {
   const qs = state ? `?state=${encodeURIComponent(state)}` : '';
-  return `${BASE}/auth/login${qs}`;
+  return `${BASE}/api/v1/portal/auth/login${qs}`;
 }
 
 // ---- Endpoints ----
@@ -230,26 +230,26 @@ export function oauthLoginUrl(state?: string): string {
 export const api = {
   /** mock | real — ให้ frontend เลือก UI login ให้ถูกโหมด */
   getAuthMode(): Promise<{ mode: 'mock' | 'real' }> {
-    return request('/auth/mode');
+    return request('/api/v1/portal/auth/mode');
   },
   getProviders(): Promise<{ providers: MockProfile[] }> {
-    return request('/auth/providers');
+    return request('/api/v1/portal/auth/providers');
   },
   login(providerId: string): Promise<LoginResponse> {
-    return request('/auth/session', {
+    return request('/api/v1/portal/auth/session', {
       method: 'POST',
       body: JSON.stringify({ providerId }),
     });
   },
   /** (real) แลก authorization code จาก Provider ID เป็น session JWT */
   loginWithCode(code: string): Promise<LoginResponse> {
-    return request('/auth/callback', {
+    return request('/api/v1/portal/auth/callback', {
       method: 'POST',
       body: JSON.stringify({ code }),
     });
   },
   getMe(): Promise<{ identity: Identity }> {
-    return request('/auth/me');
+    return request('/api/v1/portal/auth/me');
   },
   listPatients(query: PatientListQuery = {}): Promise<Paginated<PatientListItem>> {
     return request(`/api/v1/patients${toQueryString(query)}`);

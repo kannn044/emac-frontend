@@ -79,3 +79,13 @@ components/
   CardView.tsx          บัตรแพ้ยา + QR
 App.tsx                 gate: login ↔ portal
 ```
+
+## Portal authentication separated from third-party API
+
+Frontend authentication uses `/api/v1/portal/auth/*` (mode, providers, session, login, callback, me).
+Set `PORTAL_AUTH_PROVIDER=mock` in the backend for the demo account picker.
+Third-party `/auth/*` and `/api/v1/drugallergy/search` always use real Provider ID and real Parquet,
+regardless of portal mode. Portal tokens cannot call third-party search or refresh endpoints.
+Deploy both repositories together and rebuild this frontend with `npm run build:emac`.
+Existing nginx `/api/` proxy handles these routes; no new location is needed.
+Existing sessions must log in again after this update.
